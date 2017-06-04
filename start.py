@@ -1,25 +1,33 @@
 import os
 import pickle
 
-STORAGE_PATH = '/home/biswajit/Documents/log.py'
+STORAGE_PATH = '/home/biswajit/Documents/'
 def create_log():
-    # root = raw_input()
-    root = '/home/biswajit/Desktop'
+    root = raw_input("Enter directory path to be logged.")
     if not os.path.exists(root):
         return False
     file_meta_data = {}
+    print 'logging started'
     for path, subdir_arr, file_arr in os.walk(root):
         for file_name in file_arr:
+            print 'logging ',file_name
             file_path_absolute = os.path.join(path, file_name)
             file_meta_data[file_path_absolute] = {}
             file_meta_data[file_path_absolute]['la_time'] = os.stat(file_path_absolute).st_atime
             file_meta_data[file_path_absolute]['lm_time'] = os.stat(file_path_absolute).st_mtime
+    STORAGE_PATH += root.split('/')[-1]+'.py'
     f = open(STORAGE_PATH, 'wb')
     pickle.dump(file_meta_data, f)
     f.close()
 
-def check_log(path):
-    existing_log = pickle.load(open(STORAGE_PATH))
+def check_log():
+    path = raw_input("Enter path of directory to check for log.")
+    log_file = STORAGE_PATH + path.split('/')[-1]+".py"
+    print log_file
+    if not os.path.exists(log_file):
+        print 'No log found'
+        return False
+    existing_log = pickle.load(open(log_file))
     current_log = {}
     current_log = {}
     for path, subdir_arr, file_arr in os.walk(path):
@@ -39,8 +47,23 @@ def check_log(path):
                 modified_file_arr.append(file_path)
         except KeyError:
             new_file_arr.append(file_path)
-    print 42,new_file_arr
-    print 43,accessed_file_arr
-    print 44,modified_file_arr
-            
+    print 'new files added'
+    for file_name in new_file_arr:
+        print file_name
+    print '-----------------'
+    print 'last accessed files'
+    for file_name in accessed_file_arr:
+        print file_name
+    print '-----------------'
+    print 'last modified files'
+    for file_name in modified_file_arr:
+        print file_name
 
+def start():
+    res = raw_input("Log current state of a directory? (y/n)")
+    if res == 'y':
+        create_log()
+    else:
+        check_log()
+
+start()
