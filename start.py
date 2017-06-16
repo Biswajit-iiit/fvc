@@ -3,6 +3,9 @@ import pickle
 
 STORAGE_PATH = '/home/biswajit/Documents/'
 def create_log():
+    """
+    Creates and stores the log in a file.
+    """
     root = raw_input("Enter directory path to be logged.")
     if not os.path.exists(root):
         return False
@@ -21,6 +24,10 @@ def create_log():
     f.close()
 
 def check_log():
+    """
+    Checks the stored log and identifies the files
+    added,accessed and modified.
+    """
     path = raw_input("Enter path of directory to check for log.")
     log_file = STORAGE_PATH + path.split('/')[-1]+".py"
     print log_file
